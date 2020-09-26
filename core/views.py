@@ -57,9 +57,10 @@ def get_all_messages(request):
     message_text_cat = None
     try:
         for message in Message.objects.all():
-            message_text_cat += str(message) + "\n"
-    except:
-        print("couldn't get messages")
+            message_n = str(message) + "\n"
+            message_text_cat += message_n
+    except Exception as err:
+        print("couldn't get messages: ", err)
     return render(request, "view_message.html", {'message':message_text_cat})
 
 
