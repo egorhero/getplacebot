@@ -9,7 +9,7 @@ class Message(models.Model):
     location = models.OneToOneField('Location', null=True, on_delete=models.CASCADE)
 
     def __str__(self):
-        return "DATE: {}\n, LOCATION: {}\n, USER: {}\n, TEXT: {}\n".format(str(self.date), str(self.location), str(self.from_user), str(self.text))
+        return "DATE: {}\n, USER: {}\n, TEXT: {}\n".format(str(self.date), str(self.from_user), str(self.text))
 
 class User(models.Model):
 
