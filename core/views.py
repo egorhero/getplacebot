@@ -56,7 +56,7 @@ def get_last_message(request):
         all_messages = Message.objects.all()
         last_message = all_messages[len(all_messages)-1]
         if last_message != None:
-            message_text = str(last_message)
+            message_text = str(last_message) + str(last_message.location) if last_message.location != None else ""
     except Exception as err:
         print("couldn't get last message: ", err)
     return render(request, "view_message.html", {'message':message_text})
