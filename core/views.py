@@ -47,7 +47,7 @@ def get_last_message(request):
     try:
         all_messages = Message.objects.all()
         last_message = all_messages[len(all_messages)-1]
-        if last_message != None
+        if last_message != None:
             message_text = str(last_message)
     except Exception as err:
         print("couldn't get last message: ", err)
