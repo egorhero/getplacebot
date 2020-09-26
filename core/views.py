@@ -45,7 +45,8 @@ def pull_messages(request):
 def get_last_message(request):
     message_text = None
     try:
-        last_message = Message.objects.all()[-1]
+        all_messages = Message.objects.all()
+        last_message = all_messages[len(all_messages)-1]
         message_text = str(last_message)
     except Exception as err:
         print("couldn't get last message: ", err)
