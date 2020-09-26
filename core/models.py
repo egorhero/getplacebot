@@ -11,6 +11,9 @@ class Message(models.Model):
     def __str__(self):
         return "DATE: {}\n, USER: {}\n, TEXT: {}\n".format(str(self.date), str(self.from_user), str(self.text))
 
+    class Meta:
+        ordering = ['date']
+
 class User(models.Model):
 
     id = models.IntegerField(null=False, primary_key=True)
