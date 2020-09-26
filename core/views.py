@@ -55,7 +55,7 @@ def get_last_message(request):
 
 
 def get_all_messages(request):
-    message_text_cat = None
+    message_text_cat = ""
     try:
         for message in Message.objects.all():
             if message != None:
