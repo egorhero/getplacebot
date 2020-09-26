@@ -15,6 +15,8 @@ bot.set_webhook(url=settings.WEBHOOK_URL)
 @bot.message_handler()
 def handle_message(message):
     print("got message")
+
+    # get user
     u = message.from_user
     user = None
     try:
@@ -22,14 +24,20 @@ def handle_message(message):
     except Exception as err:
         print("user object not found: ", err)
         try:
+            # save user
             user = User.objects.create(id=u.id, is_bot=u.is_bot, first_name=u.first_name, username=u.username, last_name=u.last_name, language_code=u.language_code)
-            location = None
-            if message.location != None:
-                location = Location.objects.create(latitude=message.location.latitude, longitude=message.location.longitude)
-            date = datetime.datetime.fromtimestamp(message.date)
-            Message.objects.create(message_id=message.message_id, from_user=user, date=date, text=message.text, location=location)
         except Exception as err:
             print("object creation error: ", err)
+
+    # save message
+    if user != None:
+        location = None
+        if message.location != None:
+            location = Location.objects.create(latitude=message.location.latitude, longitude=message.location.longitude)
+        date = datetime.datetime.fromtimestamp(message.date)
+        Message.objects.create(message_id=message.message_id, from_user=user, date=date, text=message.text, location=location)
+
+    # send echo
     bot.send_message(chat_id=message.chat.id, text=message.text)
 
 
