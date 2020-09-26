@@ -45,6 +45,7 @@ def handle_message(message):
 @require_POST
 def pull_messages(request):
     print("pull_messages")
+    print(request.body.decode("utf-8"))
     updates = Update.de_json(request.body.decode("utf-8"))
     bot.process_new_updates([updates])
     return HttpResponse(status=200)
