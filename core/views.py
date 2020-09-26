@@ -45,9 +45,10 @@ def pull_messages(request):
 def get_last_message(request):
     message_text = None
     try:
-        message_text = str(Message.objects.all()[-1])
-    except:
-        print("couldn't get last message")
+        last_message = Message.objects.all()[-1]
+        message_text = str(last_message)
+    except Exception as err:
+        print("couldn't get last message: ", err)
     return render(request, "view_message.html", {'message':message_text})
 
 
