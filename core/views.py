@@ -47,7 +47,8 @@ def get_last_message(request):
     try:
         all_messages = Message.objects.all()
         last_message = all_messages[len(all_messages)-1]
-        message_text = str(last_message)
+        if last_message != None
+            message_text = str(last_message)
     except Exception as err:
         print("couldn't get last message: ", err)
     return render(request, "view_message.html", {'message':message_text})
@@ -57,8 +58,9 @@ def get_all_messages(request):
     message_text_cat = None
     try:
         for message in Message.objects.all():
-            message_n = str(message) + "\n"
-            message_text_cat += message_n
+            if message != None:
+                message_n = str(message) + "\n"
+                message_text_cat += message_n
     except Exception as err:
         print("couldn't get messages: ", err)
     return render(request, "view_message.html", {'message':message_text_cat})
