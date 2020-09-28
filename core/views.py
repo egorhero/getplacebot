@@ -13,31 +13,9 @@ import datetime
 ##########
 # Init bot
 ##########
+
 bot = telebot.TeleBot(settings.TELEBOT_API_TOKEN)
-
-
-def get_bot():
-    return Bot.objects.all().first()
-
-
-def create_bot():
-    return Bot.objects.create()
-
-
-def init_bot():
-    try:
-        get_bot()
-    except Exception as err:
-        print("can't get bot from db: ", err)
-        if bot is None:
-            bot = telebot.TeleBot(settings.TELEBOT_API_TOKEN)
-        if bot is not None:
-            if bot.set_webhook(url=settings.WEBHOOK_URL):
-                create_bot()
-            else:
-                print("can't create bot object: webhook not setted")
-        else:
-            print("can't configure bot object: bot is None")
+bot.set_webhook(url=settings.WEBHOOK_URL)
 
 
 '''
@@ -123,8 +101,6 @@ def show_help(message):
 @bot.message_handler(commands=['add'])
 def add_location(message):
     try:
-        _bot = get_bot()
-        _bot.count_add()
         user = get_user(message)
         user.last_location = Location.objects.create(user_id=user.id)
         user.save()
@@ -136,9 +112,6 @@ def add_location(message):
 @bot.message_handler(content_types=['location','text','photo'])
 def put_data(message):
     try:
-        _bot = get_bot()
-        _bot.count_put()
-
         user = get_user(message)
         location = user.last_location
         if location is None:
@@ -172,8 +145,6 @@ def put_data(message):
 @bot.message_handler(commands=['list'])
 def list_locations(message):
     try:
-        _bot = get_bot()
-        _bot.count_list()
         user = get_user(message)
         answer = constants.ON_LIST_LOCATIONS_MESSAGE
         if user.locations:
@@ -191,8 +162,6 @@ def list_locations(message):
 @bot.message_handler(commands=['reset'])
 def reset_locations(message):
     try:
-        _bot = get_bot()
-        _bot.count_reset()
         user = get_user(message)
         for loc in user.locations:
             loc.delete()
@@ -201,21 +170,11 @@ def reset_locations(message):
         print("error reset locations: ", err)
 
 
-@bot.message_handler(commands=['stat'])
-def bot_stat(message):
-    try:
-        _bot = get_bot()
-        bot.send_message(chat_id=message.chat.id, text=_bot.stat)
-    except Exception as err:
-        print("error bot stat: ", err)
-
-
 @csrf_exempt
 @require_POST
 def pull_messages(request):
     print("pull_messages")
     print(request.body.decode("utf-8"))
-    init_bot()
     updates = Update.de_json(request.body.decode("utf-8"))
     bot.process_new_updates([updates])
     return HttpResponse(status=200)
