@@ -1,4 +1,4 @@
-BOT_KNOWN_COMANDS = ["/start", "/add", "/list", "/reset"]
+BOT_KNOWN_COMMANDS = ["/start", "/add", "/list", "/reset"]
 
 BOT_HELP_MESSAGE = \
 '''
