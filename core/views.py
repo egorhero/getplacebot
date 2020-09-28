@@ -104,7 +104,7 @@ def add_location(message):
         user = get_user(message)
         user.last_location = Location.objects.create(user_id=user.id)
         user.save()
-        bot.send_message(chat_id=message.chat.id, text=contants.ON_ADD_COMMAND_MESSAGE)
+        bot.send_message(chat_id=message.chat.id, text=constants.ON_ADD_COMMAND_MESSAGE)
     except Exception as err:
         print("error add location: ", err)
 
