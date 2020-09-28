@@ -13,31 +13,33 @@ import datetime
 ##########
 # Init bot
 ##########
+bot = telebot.TeleBot(settings.TELEBOT_API_TOKEN)
+
+
 def get_bot():
     return Bot.objects.all().first()
+
 
 def create_bot():
     return Bot.objects.create()
 
 
-bot = telebot.TeleBot(settings.TELEBOT_API_TOKEN)
-
-
-'''
-try:
-    get_bot()
-except Exception as err:
-    print("can't get bot from db: ", err)
-    bot = telebot.TeleBot(settings.TELEBOT_API_TOKEN)
-    if bot is not None:
-        if bot.set_webhook(url=settings.WEBHOOK_URL):
-            create_bot()
+def init_bot():
+    try:
+        get_bot()
+    except Exception as err:
+        print("can't get bot from db: ", err)
+        if bot is None:
+            bot = telebot.TeleBot(settings.TELEBOT_API_TOKEN)
+        if bot is not None:
+            if bot.set_webhook(url=settings.WEBHOOK_URL):
+                create_bot()
+            else:
+                print("can't create bot object: webhook not setted")
         else:
-            print("can't create bot object: webhook not setted")
-    else:
-        print("can't create bot object: bot is None")
+            print("can't configure bot object: bot is None")
 
-'''
+
 '''
 ###########################
 # Sample message processing
@@ -213,6 +215,7 @@ def bot_stat(message):
 def pull_messages(request):
     print("pull_messages")
     print(request.body.decode("utf-8"))
+    init_bot()
     updates = Update.de_json(request.body.decode("utf-8"))
     bot.process_new_updates([updates])
     return HttpResponse(status=200)
