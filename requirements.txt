@@ -2,3 +2,4 @@ Django==2.0.2
 gunicorn==19.7.1
 django-heroku==0.2.0
 pyTelegramBotAPI
+pillow

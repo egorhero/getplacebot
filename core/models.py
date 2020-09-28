@@ -29,11 +29,6 @@ class User(models.Model):
     language_code = models.CharField(max_length=3, null=True)
 
     last_location = models.ForeignKey('Location', null=True, on_delete=models.SET_NULL)
-'''
-    @property
-    def messages(self):
-        return self.message_set.all()
-'''
 
     @property
     def locations(self):
@@ -47,7 +42,7 @@ class User(models.Model):
 
 class Location(models.Model):
 
-    user = models.ForeignKey(User, null=False, on_delete=models.CASCADE)
+    user_id = models.IntegerField()
 
     longitude = models.FloatField(default=0.0)
     latitude = models.FloatField(default=0.0)
@@ -76,7 +71,7 @@ class Bot(models.Model):
     puts = models.IntegerField(default=0)
     lists = models.IntegerField(default=0)
     resets = models.IntegerField(default=0)
-    
+
     def count_add(self):
         self.adds += 1
         self.save()

@@ -19,6 +19,11 @@ def get_bot():
 def create_bot():
     return Bot.objects.create()
 
+
+bot = telebot.TeleBot(settings.TELEBOT_API_TOKEN)
+
+
+'''
 try:
     get_bot()
 except Exception as err:
@@ -32,6 +37,7 @@ except Exception as err:
     else:
         print("can't create bot object: bot is None")
 
+'''
 '''
 ###########################
 # Sample message processing
@@ -79,7 +85,7 @@ def get_user(message):
         print("user object not found: ", err)
         try:
             # save user
-            user = User.objects.create(id=u.id, is_bot=u.is_bot, first_name=u.first_name, username=u.username, last_name=u.last_name, langu$
+            user = User.objects.create(id=u.id, is_bot=u.is_bot, first_name=u.first_name, username=u.username, last_name=u.last_name, language_code=u.language_code)
         except Exception as err:
             print("object creation error: ", err)
     return user
@@ -102,7 +108,7 @@ def get_photo(message):
 ##################
 # Message handlers
 ##################
-@bot.message_hander(commands=['start'])
+@bot.message_handler(commands=['start'])
 def show_start_help(message):
     bot.send_message(chat_id=message.chat.id, text=constants.BOT_START_MESSAGE)
 
@@ -118,7 +124,7 @@ def add_location(message):
         _bot = get_bot()
         _bot.count_add()
         user = get_user(message)
-        user.last_location = Location.objects.create()
+        user.last_location = Location.objects.create(user_id=user.id)
         user.save()
         bot.send_message(chat_id=message.chat.id, text=contants.ON_ADD_COMMAND_MESSAGE)
     except Exception as err:
@@ -134,7 +140,7 @@ def put_data(message):
         user = get_user(message)
         location = user.last_location
         if location is None:
-            location = Location.objects.create()
+            location = Location.objects.create(user_id=user.id)
             user.last_location = location
             user.save()
 
@@ -212,7 +218,7 @@ def pull_messages(request):
     return HttpResponse(status=200)
 
 
-'''
+
 ###############
 # Test db views
 ###############
@@ -238,7 +244,7 @@ def get_all_messages(request):
     except Exception as err:
         print("couldn't get messages: ", err)
     return render(request, "view_message.html", {'message':message_text_cat})
-'''
+
 
 #def acme_challenge(request):
 #    return HttpResponse(settings.ACME_CHALLENGE_CONTENT)
