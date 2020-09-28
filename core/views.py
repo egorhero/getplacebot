@@ -85,7 +85,7 @@ def get_photo(message):
     image_data = bot.download_file(image_info.file_path)
     fp = BytesIO()
     fp.write(image_data)
-    photo = Photo()
+    photo = Photo(link=str(image_info.file_path))
     photo.upload.save(str(file_id)+".jpg", files.File(fp))
     photo.save()
     return photo
@@ -109,12 +109,14 @@ def add_location(message):
     bot.send_message(chat_id=message.chat.id, text=constants.ON_ADD_COMMAND_MESSAGE)
 
 
-def get_last_location(user):
+def get_last_location(user, create):
     last_location = None
     try:
         last_location = Location.objects.get(user=user, is_editable=True)
     except Exception as err:
         print("get last location error: ", err)
+        if create:
+            last_location = Location.objects.create(user=user)
     return last_location
 
 
@@ -122,29 +124,26 @@ def get_last_location(user):
 def put_data(message):
     try:
         user = get_user(message)
-        location = get_last_location(user)
-        location_was_none = location is None
-        if location_was_none:
-            location = Location.objects.create(user=user)
 
         if message.location:
-            # save old location as non editable
-            if location_was_none is False:
+            location = get_last_location(user, False)
+            if location:
                 location.is_editable = False
                 location.save()
-                location = Location.objects.create(user=user)
-            # save new location data
+            location = Location.objects.create(user=user)
             location.latitude = message.location.latitude
-            location.lonigude = message.location.longitude
+            location.longitude = message.location.longitude
             location.save()
             answer = constants.ON_LOCATION_SAVED_MESSAGE
 
         elif message.text:
+            location = get_last_location(user, True)
             location.text = message.text
             location.save()
             answer = constants.ON_TEXT_SAVED_MESSAGE
 
         else:
+            location = get_last_location(user, True)
             photo = get_photo(message)
             photo.location = location
             photo.save()

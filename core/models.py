@@ -61,5 +61,6 @@ class Location(models.Model):
 
 class Photo(models.Model):
 
+    link = models.TextField(null=True)
     upload = models.ImageField(upload_to='places/', null=True)
     location = models.ForeignKey(Location, null=True, on_delete=models.CASCADE)
