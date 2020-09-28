@@ -118,12 +118,10 @@ def list_locations(message):
         bot.send_message(chat_id=cid, text=constants.ON_LIST_LOCATIONS_MESSAGE)
         if user.locations:
             for loc, i in zip(user.locations, range(0, len(user.locations))):
-                bot.send_message(chat_id=cid, text=constants.LOCATION_START_DECORATOR.replace("X", str(i+1)))
-                bot.send_message(chat_id=cid, text=loc.text)
+                bot.send_message(chat_id=cid, text=constants.LOCATION_START_DECORATOR.replace("X", str(i+1))+loc.text)
                 bot.send_location(chat_id=cid, latitude=loc.latitude, longitude=loc.longitude)
                 for photo in loc.photos:
                     bot.send_photo(chat_id=cid, photo=photo.upload.file)
-                bot.send_message(chat_id=cid, text=constants.LOCATION_END_DECORATOR)
         else:
             bot.send_message(chat_id=cid, text=constants.IS_EMPTY_MESSAGE)
     except Exception as err:
