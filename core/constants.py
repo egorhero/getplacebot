@@ -1,18 +1,4 @@
-
-
-BOT_KNOWN_COMANDS = {
-    0: "/start",
-    1: "/add",
-    2: "/list",
-    3: "/reset",
-}
-
-BOT_INPUT_STATES = {
-    0: "command",
-    1: "coords",
-    2: "address",
-    3: "pictures",
-}
+BOT_KNOWN_COMANDS = ["/start", "/add", "/list", "/reset"]
 
 BOT_HELP_MESSAGE = \
 '''
