@@ -17,7 +17,6 @@ import datetime
 bot = telebot.TeleBot(settings.TELEBOT_API_TOKEN)
 bot.set_webhook(url=settings.WEBHOOK_URL)
 
-
 '''
 ###########################
 # Sample message processing
@@ -82,7 +81,7 @@ def get_photo(message):
     file_id = message.photo[-1].file_id
     image_info = bot.get_file(file_id)
     image_data = bot.download_file(image_info.file_path)
-    return Photo.objects.create(upload=image_data)
+    return Photo.objects.create(upload=io.BytesIO(image_data))
 
 
 ##################
@@ -100,27 +99,34 @@ def show_help(message):
 
 @bot.message_handler(commands=['add'])
 def add_location(message):
-    try:
-        user = get_user(message)
-        user.last_location = Location.objects.create(user_id=user.id)
-        user.save()
-        bot.send_message(chat_id=message.chat.id, text=constants.ON_ADD_COMMAND_MESSAGE)
-    except Exception as err:
-        print("error add location: ", err)
+    bot.send_message(chat_id=message.chat.id, text=constants.ON_ADD_COMMAND_MESSAGE)
 
+
+def get_last_location(user):
+    last_location = None
+    try:
+        last_location = Location.objects.get(user=user, is_editable=True)
+    except Exception as err:
+        print("get last location error: ", err)
+    return last_location
 
 
 @bot.message_handler(func=lambda message: message.text not in constants.BOT_KNOWN_COMMANDS, content_types=['location','text','photo'])
 def put_data(message):
     try:
         user = get_user(message)
-        location = user.last_location
-        if location is None:
-            location = Location.objects.create(user_id=user.id)
-            user.last_location = location
-            user.save()
+        location = get_last_location(user)
+        location_was_none = location is None
+        if location_was_none:
+            location = Location.objects.create(user=user)
 
         if message.location:
+            # save old location as non editable
+            if location_was_none is False:
+                location.is_editable = False
+                location.save()
+                location = Location.objects.create(user=user)
+            # save new location data
             location.latitude = message.location.latitude
             location.lonigude = message.location.longitude
             location.save()
