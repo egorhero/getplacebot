@@ -86,7 +86,7 @@ def get_photo(message):
     fp = BytesIO()
     fp.write(image_data)
     photo = Photo()
-    photo.upload.save(image_info.file_name, files.File(fp))
+    photo.upload.save(str(file_id)+".jpg", files.File(fp))
     photo.save()
     return photo
 
