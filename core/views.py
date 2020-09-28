@@ -118,7 +118,7 @@ def list_locations(message):
         bot.send_message(chat_id=cid, text=constants.ON_LIST_LOCATIONS_MESSAGE)
         if user.locations:
             for loc, i in zip(user.locations, range(0, len(user.locations))):
-                bot.send_message(chat_id=cid, text=constants.LOCATION_START_DECORATOR.replace("X", str(i)))
+                bot.send_message(chat_id=cid, text=constants.LOCATION_START_DECORATOR.replace("X", str(i+1)))
                 bot.send_message(chat_id=cid, text=loc.text)
                 bot.send_location(chat_id=cid, latitude=loc.latitude, longitude=loc.longitude)
                 for photo in loc.photos:
