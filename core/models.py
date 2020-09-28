@@ -42,7 +42,7 @@ class User(models.Model):
 
 class Location(models.Model):
 
-    user_id = models.IntegerField()
+    user_id = models.IntegerField(null=False)
 
     longitude = models.FloatField(default=0.0)
     latitude = models.FloatField(default=0.0)
