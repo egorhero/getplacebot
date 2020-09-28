@@ -2,23 +2,6 @@ from django.db import models
 from core import constants
 
 
-'''
-class Message(models.Model):
-
-    message_id = models.IntegerField(null=False, primary_key=True)
-    from_user = models.ForeignKey('User', null=False, on_delete=models.CASCADE)
-    date = models.DateTimeField(null=False)
-    text = models.TextField(default="")
-    location = models.OneToOneField('Location', null=True, on_delete=models.CASCADE)
-
-    def __str__(self):
-        return "DATE: {}\n, USER: {}\n, TEXT: {}\n".format(str(self.date), str(self.from_user), str(self.text))
-
-    class Meta:
-        ordering = ['date']
-'''
-
-
 class User(models.Model):
 
     id = models.IntegerField(null=False, primary_key=True)

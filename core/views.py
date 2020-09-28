@@ -138,7 +138,7 @@ def put_data(message):
 
         elif message.text:
             location = get_last_location(user, True)
-            location.text = message.text
+            location.text += message.text
             location.save()
             answer = constants.ON_TEXT_SAVED_MESSAGE
 
@@ -159,15 +159,16 @@ def put_data(message):
 def list_locations(message):
     try:
         user = get_user(message)
-        answer = constants.ON_LIST_LOCATIONS_MESSAGE
+        cid = message.chat.id
+        bot.send_message(cid, constants.ON_LIST_LOCATIONS_MESSAGE)
         if user.locations:
-            answer += "\n"
             for loc in user.locations:
-                loc_str = str(loc) + "\n"
-                answer += loc_str
-        else:
-            answer += constants.IS_NULL_MESSAGE
-        bot.send_message(chat_id=message.chat.id, text=answer)
+                bot.send_location(chat_id=cid, loc.latitude, loc.longitude)
+                for photo in loc.photos:
+                    bot.send_photo(chat_id=cid, photo.upload.file)
+                bot.send_message(chat_id=cid, loc.text)
+        else
+            bot.send_message(chat_id=cid, constants.IS_NULL_MESSAGE)
     except Exception as err:
         print("error list locations: ", err)
 
