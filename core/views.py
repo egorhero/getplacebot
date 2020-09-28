@@ -2,7 +2,7 @@ from django.shortcuts import render
 import telebot
 from telebot.types import Update
 from getplacebot import settings
-from core.models import User, Location, Photo, Bot
+from core.models import User, Location, Photo
 from core import constants
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
