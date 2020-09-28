@@ -61,5 +61,5 @@ class Location(models.Model):
 
 class Photo(models.Model):
 
-    upload = models.ImageField(upload_to='places/')
-    location = models.ForeignKey(Location, on_delete=models.CASCADE)
+    upload = models.ImageField(upload_to='places/', null=True)
+    location = models.ForeignKey(Location, null=True, on_delete=models.CASCADE)

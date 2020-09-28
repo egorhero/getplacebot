@@ -7,8 +7,9 @@ from core import constants
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
+from django.core import files
 import datetime
-import io
+from io import BytesIO
 
 
 ##########
@@ -82,7 +83,12 @@ def get_photo(message):
     file_id = message.photo[-1].file_id
     image_info = bot.get_file(file_id)
     image_data = bot.download_file(image_info.file_path)
-    return Photo.objects.create(upload=io.BytesIO(image_data))
+    fp = BytesIO()
+    fp.write(image_data)
+    photo = Photo()
+    photo.upload.save(image_info.file_name, files.File(fp))
+    photo.save()
+    return photo
 
 
 ##################
