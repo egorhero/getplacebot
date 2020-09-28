@@ -37,10 +37,10 @@ Thank you for using my service! \n
 Have a nice day!
 ''' % (BOT_HELP_MESSAGE)
 
-ON_ADD_COMMAND_MESSAGE = "Put some location (text, photo) data to save it."
-ON_LOCATION_SAVED_MESSAGE = "Location saved."
-ON_TEXT_SAVED_MESSAGE = "Text saved."
-ON_PHOTO_SAVED_MESSAGE = "Photo saved."
+ON_ADD_COMMAND_MESSAGE = "Waiting for location (text, photo) data..."
+ON_LOCATION_SAVED_MESSAGE = "Location saved. Ok!"
+ON_TEXT_SAVED_MESSAGE = "Text saved. Ok!"
+ON_PHOTO_SAVED_MESSAGE = "Photo saved. Ok!"
 ON_LIST_LOCATIONS_MESSAGE = "List of noted locations..."
 ON_RESET_COMMAND_MESSAGE = "All location data was dropped."
 IS_NULL_MESSAGE = "is null"
