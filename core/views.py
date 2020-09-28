@@ -110,7 +110,7 @@ def add_location(message):
 
 
 
-@bot.message_handler(func=lambda message: message.text is not in constants.BOT_KNOWN_COMMANDS, content_types=['location','text','photo'])
+@bot.message_handler(func=lambda message: message.text not in constants.BOT_KNOWN_COMMANDS, content_types=['location','text','photo'])
 def put_data(message):
     try:
         user = get_user(message)
