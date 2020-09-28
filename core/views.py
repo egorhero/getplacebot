@@ -82,7 +82,7 @@ def get_photo(message):
     file_id = message.photo[-1].file_id
     image_info = bot.get_file(file_id)
     image_data = bot.download_file(image_info.file_path)
-    return Photo.create.object(upload=image_data)
+    return Photo.objects.create(upload=image_data)
 
 
 ##################
