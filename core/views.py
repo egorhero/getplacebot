@@ -15,43 +15,8 @@ from io import BytesIO
 ##########
 # Init bot
 ##########
-
 bot = telebot.TeleBot(settings.TELEBOT_API_TOKEN)
 bot.set_webhook(url=settings.WEBHOOK_URL)
-
-'''
-###########################
-# Sample message processing
-###########################
-@bot.message_handler(commands=['test'])
-def handle_message(message):
-    print("got message")
-
-    # get user
-    u = message.from_user
-    user = None
-    try:
-        user = User.objects.get(id=u.id)
-    except Exception as err:
-        print("user object not found: ", err)
-        try:
-            # save user
-            user = User.objects.create(id=u.id, is_bot=u.is_bot, first_name=u.first_name, username=u.username, last_name=u.last_name, language_code=u.language_code)
-        except Exception as err:
-            print("object creation error: ", err)
-
-    # save message
-    if user != None:
-        location = None
-        if message.location != None:
-            location = Location.objects.create(latitude=message.location.latitude, longitude=message.location.longitude)
-        date = datetime.datetime.fromtimestamp(message.date)
-        Message.objects.create(message_id=message.message_id, from_user=user, date=date, text=message.text, location=location)
-
-    # send echo
-    bot.send_message(chat_id=message.chat.id, text=message.text)
-
-'''
 
 
 ##################
@@ -65,18 +30,21 @@ def get_user(message):
     except Exception as err:
         print("user object not found: ", err)
         try:
-            # save user
             user = User.objects.create(id=u.id, is_bot=u.is_bot, first_name=u.first_name, username=u.username, last_name=u.last_name, language_code=u.language_code)
         except Exception as err:
             print("object creation error: ", err)
     return user
 
 
-def get_location(message):
-    location = None
-    if message.location != None:
-        location = Location.objects.create(latitude=message.location.latitude, longitude=message.location.longitude)
-    return location
+def get_last_location(user, create):
+    last_location = None
+    try:
+        last_location = Location.objects.get(user=user, is_editable=True)
+    except Exception as err:
+        print("get last location error: ", err)
+        if create:
+            last_location = Location.objects.create(user=user)
+    return last_location
 
 
 def get_photo(message):
@@ -107,17 +75,6 @@ def show_help(message):
 @bot.message_handler(commands=['add'])
 def add_location(message):
     bot.send_message(chat_id=message.chat.id, text=constants.ON_ADD_COMMAND_MESSAGE)
-
-
-def get_last_location(user, create):
-    last_location = None
-    try:
-        last_location = Location.objects.get(user=user, is_editable=True)
-    except Exception as err:
-        print("get last location error: ", err)
-        if create:
-            last_location = Location.objects.create(user=user)
-    return last_location
 
 
 @bot.message_handler(func=lambda message: message.text not in constants.BOT_KNOWN_COMMANDS, content_types=['location','text','photo'])
@@ -160,15 +117,15 @@ def list_locations(message):
     try:
         user = get_user(message)
         cid = message.chat.id
-        bot.send_message(cid, constants.ON_LIST_LOCATIONS_MESSAGE)
+        bot.send_message(chat_id=cid, text=constants.ON_LIST_LOCATIONS_MESSAGE)
         if user.locations:
             for loc in user.locations:
-                bot.send_location(chat_id=cid, loc.latitude, loc.longitude)
+                bot.send_location(chat_id=cid, latitude=loc.latitude, longitude=loc.longitude)
                 for photo in loc.photos:
-                    bot.send_photo(chat_id=cid, photo.upload.file)
-                bot.send_message(chat_id=cid, loc.text)
+                    bot.send_photo(chat_id=cid, photo=photo.upload.file)
+                bot.send_message(chat_id=cid, text=loc.text)
         else:
-            bot.send_message(chat_id=cid, constants.IS_NULL_MESSAGE)
+            bot.send_message(chat_id=cid, text=constants.IS_NULL_MESSAGE)
     except Exception as err:
         print("error list locations: ", err)
 
@@ -192,34 +149,6 @@ def pull_messages(request):
     updates = Update.de_json(request.body.decode("utf-8"))
     bot.process_new_updates([updates])
     return HttpResponse(status=200)
-
-
-
-###############
-# Test db views
-###############
-def get_last_message(request):
-    message_text = None
-    try:
-        all_messages = Message.objects.all()
-        last_message = all_messages[len(all_messages)-1]
-        if last_message != None:
-            message_text = str(last_message) + (str(last_message.location) if last_message.location != None else "")
-    except Exception as err:
-        print("couldn't get last message: ", err)
-    return render(request, "view_message.html", {'message':message_text})
-
-
-def get_all_messages(request):
-    message_text_cat = ""
-    try:
-        for message in Message.objects.all():
-            if message != None:
-                message_n = str(message) + "\n"
-                message_text_cat += message_n
-    except Exception as err:
-        print("couldn't get messages: ", err)
-    return render(request, "view_message.html", {'message':message_text_cat})
 
 
 #def acme_challenge(request):

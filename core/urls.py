@@ -21,7 +21,5 @@ from getplacebot import settings
 
 urlpatterns = [
     path(settings.TELEBOT_API_TOKEN + "/", views.pull_messages),
-    path("get_last_message", views.get_last_message),
-    path("get_all_messages", views.get_all_messages),
     #url("^.well-known/acme-challenge/.*$", views.acme_challenge, name='acme-challenge'),
 ]
