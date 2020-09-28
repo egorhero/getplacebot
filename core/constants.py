@@ -3,14 +3,10 @@ BOT_KNOWN_COMMANDS = ["/start", "/add", "/list", "/reset"]
 BOT_HELP_MESSAGE = \
 '''
 Just type some of this commands \n
-and input your data!
-\n
+and input your data! \n
 /add location (address and photo) \n
-\n
-/list locations (you noted)
-\n
-/reset locations (old data)
-\n
+/list locations (you noted) \n
+/reset locations (old data) \n
 '''
 
 BOT_START_MESSAGE = \
@@ -29,4 +25,4 @@ ON_TEXT_SAVED_MESSAGE = "Text saved. Ok!"
 ON_PHOTO_SAVED_MESSAGE = "Photo saved. Ok!"
 ON_LIST_LOCATIONS_MESSAGE = "List of noted locations..."
 ON_RESET_COMMAND_MESSAGE = "All location data was dropped."
-IS_NULL_MESSAGE = "is null"
+IS_EMPTY_MESSAGE = "is empty"

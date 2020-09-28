@@ -123,7 +123,7 @@ def list_locations(message):
                     bot.send_photo(chat_id=cid, photo=photo.upload.file)
                 bot.send_message(chat_id=cid, text=loc.text)
         else:
-            bot.send_message(chat_id=cid, text=constants.IS_NULL_MESSAGE)
+            bot.send_message(chat_id=cid, text=constants.IS_EMPTY_MESSAGE)
     except Exception as err:
         print("error list locations: ", err)
 
